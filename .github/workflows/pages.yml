@@ -1,0 +1,49 @@
+name: Deploy Excalidraw
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Excalidraw
+        uses: actions/checkout@v4
+        with:
+          repository: excalidraw/excalidraw
+          ref: e1b7aacb356a492aa1e0fc6eb57b8896124027f0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --network-timeout 600000
+      - name: Build static app
+        run: yarn --cwd excalidraw-app build:app:docker --base ./
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: excalidraw-app/build
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
