@@ -6,6 +6,6 @@ GitHub Actions builds and deploys the site on every push to `main`. The build us
 
 Regular drawings are stored in the visitor's browser, not in this repository. Export important drawings as `.excalidraw` files. GitHub Pages is static hosting and does not provide its own sharing or collaboration backend.
 
-Custom domain: `excalidraw.svenshen.me`. Cloudflare DNS should have a DNS-only CNAME record for `excalidraw` pointing to `sven0219.github.io`.
+Custom domain: `excalidraw.svenshen.me`. The `excalidraw` DNS record is proxied through Cloudflare (orange cloud). The site is served by GitHub Pages behind Cloudflare.
 
 Upstream: https://github.com/excalidraw/excalidraw (MIT License).
